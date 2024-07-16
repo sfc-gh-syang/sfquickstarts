@@ -492,7 +492,7 @@ def gen_grid_builder_for_gong_df(result_gong_raw):
 
 @st.cache_resource
 def load_and_create_text2image_model_pipe():
-    from diffusers import StableDiffusionXLPipeline, UNet2DConditionModel  # , EulerDiscreteScheduler
+    from diffusers import StableDiffusionXLPipeline, UNet2DConditionModel
     from huggingface_hub import hf_hub_download
     from safetensors.torch import load_file
     import torch
@@ -502,15 +502,11 @@ def load_and_create_text2image_model_pipe():
     ckpt = "sdxl_lightning_8step_unet.safetensors"  # Use the correct ckpt for your step setting
 
     cache_dir = "../stage/diffusers/"
-    # st.write('Creating load_config...')
     unet_config = UNet2DConditionModel.load_config(base, cache_dir=cache_dir, subfolder="unet")
-    # st.write('Creating unet...')
     unet = UNet2DConditionModel.from_config(unet_config, subfolder="unet").to("cuda", torch.float16)
 
-    # st.write('Loading model from repo...')
     unet.load_state_dict(load_file(hf_hub_download(repo, ckpt), device="cuda"))
 
-    # st.write('Creating pipe...')
     pipe = StableDiffusionXLPipeline.from_pretrained(base, unet=unet, torch_dtype=torch.float16, variant="fp16").to(
         "cuda")
     return pipe
