@@ -1,0 +1,24 @@
+spec:
+  containers:
+    - name: streamlit
+      image: sfengineering-ml4snow.registry.snowflakecomputing.com/syang/serve_schema/serve_repo/streamlit_multi
+      volumeMounts:
+      - name: stage 
+        mountPath: /stage
+      resources:
+        requests:
+          memory: 4G
+          nvidia.com/gpu: 1
+        limits:
+          nvidia.com/gpu: 1
+      env:
+        SNOWFLAKE_WAREHOUSE: XSMALL
+        HUGGING_FACE_HUB_TOKEN: hf_xxxxxxxxx
+        NUM_GPU: 4
+  endpoints:
+    - name: streamlit
+      port: 8501
+      public: true
+  volumes:
+  - name: stage
+    source: "@syang.llm_schema.llm_stage"
