@@ -1,5 +1,5 @@
 """
-preprocess for Sales activity assistant
+preprocess tools for Sales Assistant
 """
 __author__="""Stella Yang"""
 __email__="stella.yang@snowflake.com"

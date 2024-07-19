@@ -10,7 +10,7 @@ from tools.load_data_query import *
 
 
 # configure selection
-cellstyle_jscode_gong = JsCode("""
+cellstyle_jscode_conv = JsCode("""
 function(params){
     if (params.value == 'In Pursuit') {
         return {
@@ -116,7 +116,7 @@ def combine_context_and_quesiton_to_prompt(prompt='', question='', context_i='',
 
 def get_unique_competitor_context_set(comp_res):
     """
-    Combines and extracts unique competitors from a list of competitor results.
+    Combines and extracts unique competitors, and its short context from a list of competitor results.
     """
     agg_dct = {}
     # print(comp_res)
@@ -147,96 +147,64 @@ def get_unique_competitor_context_set(comp_res):
 def create_competitor_context(cols):
     res = {}
 
-    DATABRICKS = cols[0]
-    REDSHIFT = cols[1]
-    IBM = cols[2]
-    EXASOL = cols[3]
-    STARBURST = cols[4]
-    FIREBOLT = cols[5]
-    TERADATA = cols[6]
-    ACTIAN = cols[7]
-    MICROSOFT = cols[8]
+    DA20 = cols[0]
+    RE4 = cols[1]
+    I2 = cols[2]
+    EX1 = cols[3]
+    ST1 = cols[4]
+    FI18 = cols[5]
+    TE18 = cols[6]
+    AC20 = cols[7]
+    MI3 = cols[8]
 
-    SAP = cols[9]
-    AWS = cols[10]
-    GREENPLUM = cols[11]
-    GOOGLE = cols[12]
-    CLOUDERA = cols[13]
+    S1 = cols[9]
+    A23 = cols[10]
+    GR5 = cols[11]
+    GO15 = cols[12]
+    CL15 = cols[13]
 
-    ORACLE = cols[14]
-    VERTICA = cols[15]
-    PALANTIR = cols[16]
-    YELLOWBRICK = cols[17]
+    OR1 = cols[14]
+    VE18 = cols[15]
+    PA12 = cols[16]
+    YE12 = cols[17]
 
-    if DATABRICKS!='':
-        res['DATABRICKS']=DATABRICKS
-    if REDSHIFT!='':
-        res ['REDSHIFT']= REDSHIFT
-    if IBM !='':
-        res ['IBM']= IBM
-    if EXASOL !='':
-        res ['EXASOL']= EXASOL
-    if STARBURST !='':
-        res ['STARBURST']= STARBURST
-    if FIREBOLT !='':
-        res ['FIREBOLT']= FIREBOLT
-    if TERADATA !='':
-        res ['TERADATA']= TERADATA
-    if ACTIAN !='':
-        res ['ACTIAN']= ACTIAN
-    if MICROSOFT !='':
-        res ['MICROSOFT']= MICROSOFT
-    if SAP !='':
-        res ['SAP']= SAP
-    if AWS !='':
-        res ['AWS']= AWS
-    if GREENPLUM !='':
-        res ['GREENPLUM']= GREENPLUM
-    if GOOGLE !='':
-        res ['GOOGLE']= GOOGLE
-    if CLOUDERA !='':
-        res ['CLOUDERA']= CLOUDERA
-    if ORACLE !='':
-        res ['ORACLE']= ORACLE
-    if VERTICA !='':
-        res ['VERTICA']= VERTICA
-    if PALANTIR !='':
-        res ['PALANTIR']= PALANTIR
-    if YELLOWBRICK !='':
-        res ['YELLOWBRICK']= YELLOWBRICK
-    # if res =='':
-    #     res = 'No competitor'
-    # if res.endswith(', ') == True:
-    #     res = res[:-2]
+    if DA20!='':
+        res['DA20']=DA20
+    if RE4!='':
+        res ['RE4']= RE4
+    if I2 !='':
+        res ['I2']= I2
+    if EX1 !='':
+        res ['EX1']= EX1
+    if ST1 !='':
+        res ['ST1']= ST1
+    if FI18 !='':
+        res ['FI18']= FI18
+    if TE18 !='':
+        res ['TE18']= TE18
+    if AC20 !='':
+        res ['AC20']= AC20
+    if MI3 !='':
+        res ['MI3']= MI3
+    if S1 !='':
+        res ['S1']= S1
+    if A23 !='':
+        res ['A23']= A23
+    if GR5 !='':
+        res ['GR5']= GR5
+    if GO15 !='':
+        res ['GO15']= GO15
+    if CL15 !='':
+        res ['CL15']= CL15
+    if OR1 !='':
+        res ['OR1']= OR1
+    if VE18 !='':
+        res ['VE18']= VE18
+    if PA12 !='':
+        res ['PA12']= PA12
+    if YE12 !='':
+        res ['YE12']= YE12
     return res
-
-
-
-def double_check_competitor(chunk,comp_i):
-    competitor_dct = {'DATABRICKS':['databrick','data brick']
-        ,'REDSHIFT':['redshift','red shift']
-        ,'IBM':['ibm']
-        ,'EXASOL':['exasol']
-        ,'STARBURST':['starburst']
-        ,'FIREBOLT':['firebolt', 'fire bolt']
-        ,'TERADATA':['teradata','tera data']
-        ,'ACTIAN':['actian']
-        ,'MICROSOFT':['microsoft','azure','synapse','fabric']
-        ,'SAP':['sap']
-        ,'AWS':['aws','aws emr']
-        ,'GREENPLUM':['greenplum']
-        ,'GOOGLE':['google','gcp','big query']
-        ,'CLOUDERA':['cloudera']
-        ,'ORACLE':['oracle']
-        ,'VERTICA':['vertica']
-        ,'PALANTIR':['vertica']
-        ,'YELLOWBRICK':['yellowbrick', 'yellow brick']
-    }
-    flag = 0
-    for comp_i in competitor_dct.get(comp_i):
-        if chunk.lower().__contains__(comp_i):
-            flag+=1
-    return flag>0
 
 
 
@@ -255,11 +223,9 @@ def convert_multiple_pieces_to_one_feed(df):
     for i in df.index:
         print(i)
         if df.shape[0]>1:
-            piece_i_dict = dict(df.loc[i])  # wired thing should use iloc to access by index, but only loc works for acc_id='0010Z00001xwhYJQAY'
+            piece_i_dict = dict(df.loc[i])
         else:
             piece_i_dict = dict(df)
-        # print('------start the piece------------')
-        # combined_pieces = combined_pieces +'\n\nslice '+str(i)+':\n' +  'Conversation date: '+ piece_i_dict['metadata']['source'].split('__*__')[1]+'\n' + piece_i_dict['page_content'].replace('Company_ABC_','Snowflake')
         combined_pieces = combined_pieces + '\n\nslice ' + str(i) + ':\n' + 'Conversation date: ' + piece_i_dict['MEETING_DATE_STR'] + '\n' + piece_i_dict['MEETING_CHUNK'].replace('Company_ABC_', 'Snowflake')
 
     return combined_pieces
@@ -335,42 +301,18 @@ def convert_processed_opp_to_str(df = None):
     Returns:
     - str: A formatted string containing information about processed opportunities, including OPP_PROCESSED_STR, sorted by CLOSE_DATE.
     """
+    # st.write(df.types)
+    # df['TOTAL_ACV_'] = df['TOTAL_ACV'].apply(lambda x: convert_num_to_string_flexible(x))
     df.sort_values(['CLOSE_DATE'], inplace=True)
     cnt=0
     res_str = 'NEXT STEPS section:'
     for idx in df.index:
         cnt+=1
-        # print(idx)
         if df.loc[idx]['TOTAL_ACV_']!='$0':
             res_str+= '\nSlice '+ str(cnt) + ', Opporutnity '+df.loc[idx]['OPP_NAME'] +' with Total ACV'+df.loc[idx]['TOTAL_ACV_']+':\n'+df.loc[idx]['OPP_PROCESSED_STR']
         else:
             res_str += '\nSlice ' + str(cnt) + ', Opporutnity ' + df.loc[idx]['OPP_NAME'] + ':\n' + df.loc[idx]['OPP_PROCESSED_STR']
     return res_str
-
-
-
-# can skip if uploaded pre-process
-def convert_processed_opp_separate_to_str(df = None):
-    """
-    Converts processed opportunity data from a DataFrame to a formatted string, for single oppty
-
-    Parameters:
-    - df (DataFrame): Pandas DataFrame containing processed opportunity data with columns like 'OPP_NAME', 'TOTAL_ACV_', and 'OPP_PROCESSED_STR'.
-
-    Returns:
-    - str: A formatted string containing information about processed opportunities, including OPP_PROCESSED_STR, sorted by CLOSE_DATE.
-    """
-    df.sort_values(['CLOSE_DATE'], inplace=True)
-    cnt=0
-    res_str = ''
-    for idx in df.index:
-        cnt+=1
-        # if df.loc[idx]['TOTAL_ACV_']!='$0':
-        #     res_str+= '\nSlice '+ str(cnt) + ', Opporutnity '+df.loc[idx]['OPP_NAME'] +' with Total ACV'+df.loc[idx]['TOTAL_ACV_']+':\n'+df.loc[idx]['OPP_PROCESSED_STR']
-        # else:
-        res_str += '\nSlice ' + str(cnt) + ':\nOPP_NAME: ' + df.loc[idx]['OPP_NAME'] + ':\n' + df.loc[idx]['OPP_PROCESSED_STR']
-    return res_str
-    # return '\nSlice ' + str(cnt) + ':\nOPP_NAME: ' + df['OPP_NAME'] + ':\n' + df['OPP_PROCESSED_STR']
 
 
 
@@ -385,15 +327,16 @@ def convert_processed_opp_to_str(df = None):
     - str: A formatted string containing information about processed opportunities, including OPP_PROCESSED_STR, sorted by CLOSE_DATE.
     """
     df.sort_values(['CLOSE_DATE'], inplace=True)
+    df['TOTAL_ACV_'] = df['TOTAL_ACV'].apply(lambda x: convert_num_to_string_flexible(x))
     cnt=0
     res_str = 'NEXT STEPS section:'
     for idx in df.index:
         cnt+=1
         # print(idx)
         if df.loc[idx]['TOTAL_ACV_']!='$0':
-            res_str+= '\nSlice '+ str(cnt) + ', Opporutnity '+df.loc[idx]['OPP_NAME'] +' with Total ACV'+df.loc[idx]['TOTAL_ACV_']+':\n'+df.loc[idx]['OPP_PROCESSED_STR']
+            res_str+= '\nSlice '+ str(cnt) + ', Opportunity '+df.loc[idx]['OPP_NAME'] +' with Total ACV'+df.loc[idx]['TOTAL_ACV_']+':\n'+df.loc[idx]['OPP_PROCESSED_STR']
         else:
-            res_str += '\nSlice ' + str(cnt) + ', Opporutnity ' + df.loc[idx]['OPP_NAME'] + ':\n' + df.loc[idx]['OPP_PROCESSED_STR']
+            res_str += '\nSlice ' + str(cnt) + ', Opportunity ' + df.loc[idx]['OPP_NAME'] + ':\n' + df.loc[idx]['OPP_PROCESSED_STR']
     return res_str
 
 
@@ -455,7 +398,7 @@ def rename_opp_timeline(result_opp_raw):
 
 
 
-def _rename_gong_timeline_df(df=None):
+def _rename_conv_timeline_df(df=None):
     df.rename(columns={'MEETING_TITLE': 'Meeting Title'
             , 'ACTIVITY_DATE': 'Meeting Date'
             , 'OWNER_FUNCTION': 'Owner Function'
@@ -469,24 +412,24 @@ def _rename_gong_timeline_df(df=None):
 
 
 
-def gen_grid_builder_for_gong_df(result_gong_raw):
-    result_gong_df = _rename_gong_timeline_df(df=result_gong_raw)
-    gb_gong_timeline = GridOptionsBuilder.from_dataframe(result_gong_df[['Meeting Title'
+def gen_grid_builder_for_conv_df(result_conv_raw):
+    result_conv_df = _rename_conv_timeline_df(df=result_conv_raw)
+    gb_conv_timeline = GridOptionsBuilder.from_dataframe(result_conv_df[['Meeting Title'
         , 'Meeting Date'
         , 'Owner Function'
         , 'Tag']])
 
-    gb_gong_timeline.configure_columns(result_gong_df, cellStyle=cellstyle_jscode_gong)
-    gb_gong_timeline.configure_selection(selection_mode="single", use_checkbox=True)
-    gb_gong_timeline.configure_side_bar()
+    gb_conv_timeline.configure_columns(result_conv_df, cellStyle=cellstyle_jscode_conv)
+    gb_conv_timeline.configure_selection(selection_mode="single", use_checkbox=True)
+    gb_conv_timeline.configure_side_bar()
 
-    data_gong_timeline = AgGrid(result_gong_df,
-                                gridOptions=gb_gong_timeline.build(),
+    data_conv_timeline = AgGrid(result_conv_df,
+                                gridOptions=gb_conv_timeline.build(),
                                 enable_enterprise_modules=True,
                                 allow_unsafe_jscode=True,
                                 update_mode=GridUpdateMode.SELECTION_CHANGED,
                                 columns_auto_size_mode=ColumnsAutoSizeMode.FIT_ALL_COLUMNS_TO_VIEW)
-    return data_gong_timeline
+    return data_conv_timeline
 
 
 

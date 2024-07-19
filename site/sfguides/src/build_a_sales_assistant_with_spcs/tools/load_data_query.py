@@ -1,14 +1,11 @@
-import json
 import os
-import pandas as pd
 import streamlit as st
-from datetime import datetime
 import snowflake.connector
 # from snowflake.connector.pandas_tools import write_pandas
 from snowflake.snowpark import Session
+
 from dotenv import load_dotenv
 load_dotenv()
-
 
 
 @st.cache_resource()
@@ -98,7 +95,7 @@ def fetch_data_multi_args_general(_session,
 
 
 
-@st.cache_resource(ttl="9000",  show_spinner="Running LLM to get answer ...")
+@st.cache_resource(ttl="9000",  show_spinner="Running LLM to get answer...")
 def fetch_data_competitor_context(_session,
                                    query=None,
                                    para_dct={},

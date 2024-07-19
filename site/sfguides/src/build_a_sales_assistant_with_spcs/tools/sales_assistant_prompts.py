@@ -2,7 +2,6 @@ import json
 import os
 import pandas as pd
 
-# Snowflake has a Competitor_List: Oracle, Microfocus, Vertica, Yellowbrick, Actian, AWS, Greenplum, Google, Cloudera, Databricks, Starburst, Firebolt, Dremio, Teradata, Palantir, IBM, Exasol, Microsoft, SAP, BigQuery.
 sys_msg_general_q = """
 Assume the role of a sales assistant within the Snowflake Inc sales team. Provide truthful responses to inquiries within the given context, prioritizing the latest information over older details.
 """
@@ -30,14 +29,11 @@ sys_msg_retrival = 'Act as a sales expert working for Snowflake Inc.'
 user_retrival_specific_template = """
 Carefully read the Slices of the conversation delimited by triple backticks. These slides involve interactions Snowflake Sales and a prospect client.
 
-Competitor list: Oracle, Microfocus, Vertica, Yellowbrick, Actian, AWS, Greenplum, Google, Cloudera, Databricks, Starburst, Firebolt, Dremio, Teradata, Palantir, IBM, Exasol, Microsoft, SAP, BigQuery.
-
 Go through all the slices and answer the question from account owner: {question}
 
 Rules:
 - Provide a relevant response based strictly on the information available under "Slices of the conversation".
 - If you find "Slices of the conversation" has the context to answer the question, then response with citing the "Conversation date."  
-- If user asks "competitor" related question, always refer to "Competitor list" to determine if there is a competitor mentioned in the context.
 Slices of the conversation:
 ```
 {context_i}
